@@ -12,7 +12,8 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "typeRoots": [
-      "./node_modules/@types"
+      "./node_modules/@types",
+      "./src/@types"
     ],
     "lib": [
       "es6",
@@ -25,5 +26,8 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
-  ]
+  ],
+  "ts-node": {
+    "files": true
+  }
 }
