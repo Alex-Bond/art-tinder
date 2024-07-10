@@ -2,6 +2,8 @@ import { FastifyPluginAsync, FastifyRequest } from 'fastify'
 import { db } from '../../db'
 import { Static, Type } from '@sinclair/typebox'
 import { sql } from 'kysely'
+import { MinioClient } from '../../services/minio.client'
+import { ArtWithUrlUtil } from '../../db/utils/art-with-url.util'
 
 const VoteRequest = Type.Object({
   art_id: Type.String({ format: 'uuid' }),
@@ -25,12 +27,12 @@ export const Voting: FastifyPluginAsync = async (fastify) => {
       .selectAll('art')
       .execute()
 
-
     return {
       status: 'ok',
-      items,
+      items: await ArtWithUrlUtil(items),
     }
   })
+
   fastify.post('/vote',
     {
       handler: async (request: FastifyRequest<{ Body: Static<typeof VoteRequest> }>, reply) => {
