@@ -9,6 +9,7 @@ import { router } from './routes/router'
 import { fastifyJwt } from '@fastify/jwt'
 import { v4 as uuidv4 } from 'uuid'
 import multipart from '@fastify/multipart'
+import { AuthService } from './services/auth.service'
 
 const app: FastifyInstance = fastify({
   logger: {
@@ -49,7 +50,7 @@ app.addHook('onRequest', async (request, reply) => {
   } catch (err) {
     // If JWT is not available or invalid, create a new one
     const sessionId = uuidv4()
-    const token = app.jwt.sign({ id: sessionId })
+    const token = AuthService.generateJWT({ id: sessionId })
 
     // Set the new token in the response header
     reply.header('Authorization', `Bearer ${token}`)
