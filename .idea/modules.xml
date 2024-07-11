@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/art-tinder.iml" filepath="$PROJECT_DIR$/.idea/art-tinder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/apps/backend.iml" filepath="$PROJECT_DIR$/apps/backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/apps/frontend.iml" filepath="$PROJECT_DIR$/apps/frontend.iml" />
     </modules>
   </component>
 </project>

@@ -1,4 +1,4 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 import { MultipartFile, MultipartValue } from '@fastify/multipart'
 
 export const CreateArtRequest = Type.Object({

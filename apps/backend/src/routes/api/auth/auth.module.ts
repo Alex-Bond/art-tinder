@@ -1,4 +1,4 @@
-import { FastifyPluginAsync, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
+import { FastifyPluginAsync, FastifyRequest } from 'fastify'
 import { LoginRequest, LoginRequestType } from './requests/login.request'
 import { AuthService } from '../../../services/auth.service'
 
