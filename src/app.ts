@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
 import fastifyStatic from '@fastify/static'
 import fastifyView from '@fastify/view'
 import * as ejs from 'ejs'
@@ -8,6 +8,7 @@ import createError from 'http-errors'
 import { router } from './routes/router'
 import { fastifyJwt } from '@fastify/jwt'
 import { v4 as uuidv4 } from 'uuid'
+import multipart from '@fastify/multipart'
 
 const app: FastifyInstance = fastify({
   logger: {
@@ -20,6 +21,8 @@ const app: FastifyInstance = fastify({
     },
   },
 })
+
+app.register(multipart, { attachFieldsToBody: true, limits: { fileSize: 1024 * 1024 * 10 } })
 
 app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET || 'bad_key',
@@ -42,18 +45,28 @@ app.register(fastifyStatic, {
 app.addHook('onRequest', async (request, reply) => {
   try {
     await request.jwtVerify()
-    request.session = await request.jwtDecode<{ id: string; sessionId: string }>() || {}
+    request.session = await request.jwtDecode<{ id: string; admin?: boolean }>() || {}
   } catch (err) {
     // If JWT is not available or invalid, create a new one
     const sessionId = uuidv4()
-    const token = app.jwt.sign({ id: sessionId, sessionId })
+    const token = app.jwt.sign({ id: sessionId })
 
     // Set the new token in the response header
     reply.header('Authorization', `Bearer ${token}`)
 
     // Decode and set the session object
-    request.session = app.jwt.decode<{ id: string; sessionId: string }>(token) || {}
+    request.session = app.jwt.decode<{ id: string; admin?: boolean }>(token) || { id: sessionId }
   }
+})
+
+app.decorate('admin_only', async (request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) => {
+  const isAdmin = request.session.admin
+
+  if (!isAdmin) {
+    return reply.status(401).send({ message: 'Authentication required' })
+  }
+
+  done()
 })
 
 // Routes

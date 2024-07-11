@@ -3,8 +3,12 @@ export {}
 declare module 'fastify' {
   interface FastifyRequest {
     session: {
-      id?: string;
-      sessionId?: string;
+      id: string;
+      admin?: boolean;
     }
+  }
+
+  export interface FastifyInstance {
+    admin_only: any //preHandlerMetaHookHandler
   }
 }

@@ -1,5 +1,6 @@
-import { FileStorageInterface } from './interfaces/file-storage.interface'
+import { FileStorageInterface } from '../interfaces/file-storage.interface'
 import * as Minio from 'minio'
+import { Readable } from 'node:stream'
 
 export class MinioClient implements FileStorageInterface {
   private client = new Minio.Client({
@@ -12,18 +13,14 @@ export class MinioClient implements FileStorageInterface {
 
   private defaultBucket = process.env.MINIO_DEFAULT_BUCKET || 'bucket'
 
-  private static instance = new MinioClient()
-
-  static getInstance() {
-    return this.instance
-  }
-
-  async upload(file: Buffer, path: string, options?: { bucket?: string }) {
-    return false
+  async upload(file: Buffer | Readable, path: string, options?: { bucket?: string }) {
+    const bucket = options?.bucket || this.defaultBucket
+    await this.client.putObject(bucket, path, file)
   }
 
   async delete(path: string, options?: { bucket?: string }) {
-    return false
+    const bucket = options?.bucket || this.defaultBucket
+    return await this.client.removeObject(bucket, path)
   }
 
   async getPreSignedUrl(path: string, options?: { bucket?: string }) {
