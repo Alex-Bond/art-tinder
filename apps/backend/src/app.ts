@@ -10,6 +10,7 @@ import { fastifyJwt } from '@fastify/jwt'
 import { v4 as uuidv4 } from 'uuid'
 import multipart from '@fastify/multipart'
 import { AuthService } from './services/auth.service'
+import cors from '@fastify/cors'
 
 const app: FastifyInstance = fastify({
   logger: {
@@ -21,6 +22,10 @@ const app: FastifyInstance = fastify({
       },
     },
   },
+})
+
+app.register(cors, {
+  exposedHeaders: ['Authorization', 'Content-Type'],
 })
 
 app.register(multipart, { attachFieldsToBody: true, limits: { fileSize: 1024 * 1024 * 10 } })

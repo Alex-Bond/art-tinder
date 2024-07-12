@@ -1,0 +1,22 @@
+.vote_container {
+    min-height: 100dvh;
+    background: url('/images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+
+
+}
+
+.inner_container {
+    max-width: 600px;
+    width: 100%;
+}
+
+.art_image {
+    max-width: 100%;
+    width: 100%;
+}
+
+.image_loading {
+    text-align: center;
+    min-height: 200px;
+}
