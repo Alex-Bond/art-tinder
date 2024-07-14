@@ -1,10 +1,7 @@
 import 'dotenv/config'
 import fastify, { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify'
 import fastifyStatic from '@fastify/static'
-import fastifyView from '@fastify/view'
-import * as ejs from 'ejs'
 import * as path from 'path'
-import createError from 'http-errors'
 import { router } from './routes/router'
 import { fastifyJwt } from '@fastify/jwt'
 import { v4 as uuidv4 } from 'uuid'
@@ -32,14 +29,6 @@ app.register(multipart, { attachFieldsToBody: true, limits: { fileSize: 1024 * 1
 
 app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET || 'bad_key',
-})
-
-// view engine setup
-app.register(fastifyView, {
-  engine: {
-    ejs: ejs,
-  },
-  root: path.join(__dirname, 'views'),
 })
 
 // Serve static files
@@ -71,8 +60,6 @@ app.decorate('admin_only', async (request: FastifyRequest, reply: FastifyReply, 
   if (!isAdmin) {
     return reply.status(401).send({ message: 'Authentication required' })
   }
-
-  done()
 })
 
 // Routes
@@ -80,7 +67,10 @@ app.register(router)
 
 // catch 404 and forward to error handler
 app.setNotFoundHandler((request, reply) => {
-  reply.code(404).send(createError(404))
+  reply.code(404).send({
+    status: 'error',
+    message: 'Not found',
+  })
 })
 
 // error handler
@@ -88,9 +78,10 @@ app.setErrorHandler((error, request, reply) => {
   const statusCode = error.statusCode || 500
   const dev = process.env.NODE_ENV === 'development'
 
-  reply.status(statusCode).view('error', {
+  reply.status(statusCode).send({
+    status: 'error',
     message: error.message,
-    error: dev ? error : {},
+    error: dev ? error : undefined,
   })
 })
 

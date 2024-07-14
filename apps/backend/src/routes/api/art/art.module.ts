@@ -11,7 +11,7 @@ export const ArtModule: FastifyPluginAsync = async (fastify) => {
       preHandler: [fastify.admin_only],
     },
     async (request, reply) => {
-      const items = await db.selectFrom('art').selectAll().execute()
+      const items = await db.selectFrom('art').selectAll().orderBy('created_at', 'desc').execute()
 
       return {
         status: 'ok',
@@ -46,7 +46,7 @@ export const ArtModule: FastifyPluginAsync = async (fastify) => {
 
       const id = v4()
 
-      await FileStorageService.getInstance().upload(buffer, `${id}.jpg`)
+      await FileStorageService.getInstance().upload(buffer, `${id}.jpg`, { mimeType: 'image/jpeg' })
 
       const item = await db.insertInto('art')
         .values({

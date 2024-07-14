@@ -20,7 +20,6 @@
     "@fastify/view": "^9.1.0",
     "@sinclair/typebox": "^0.32.34",
     "dotenv": "^16.4.5",
-    "ejs": "3.1.10",
     "fastify": "^4.28.1",
     "http-errors": "~1.6.3",
     "kysely": "^0.27.4",
@@ -32,7 +31,6 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@types/ejs": "^3.1.5",
     "@types/http-errors": "^2.0.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.14.10",

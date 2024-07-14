@@ -1,3 +1,7 @@
+.radix-themes {
+  --cursor-button: pointer;
+}
+
 body {
   margin: 0;
 }

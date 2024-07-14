@@ -21,11 +21,11 @@ export default function Home() {
     },
   })
 
-  const { isPending: isVoteLoading, error: voteError, mutate: vote } = useMutation<unknown, undefined, {
-    artId: string
-    isPositive: boolean
-  }>({
-    mutationFn: async (variables) => {
+  const { isPending: isVoteLoading, error: voteError, mutate: vote } = useMutation({
+    mutationFn: async (variables: {
+      artId: string
+      isPositive: boolean
+    }) => {
       return api?.vote(variables.artId, variables.isPositive)
     },
   })

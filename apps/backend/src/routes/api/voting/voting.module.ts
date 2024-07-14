@@ -53,7 +53,14 @@ export const VotingModule: FastifyPluginAsync = async (fastify) => {
           vote: request.body.is_positive ? 1 : -1,
         }).returning(['id']).executeTakeFirstOrThrow()
 
-        return await trx.updateTable('art').where('art.id', '=', artId).set({ votes: sql`votes + ${request.body.is_positive ? 1 : -1}` }).returningAll().executeTakeFirstOrThrow()
+        return await trx.updateTable('art')
+          .where('art.id', '=', artId)
+          .set({
+            votes: sql`votes + 1`,
+            rating: sql`rating + ${request.body.is_positive ? 1 : -1}`,
+          })
+          .returningAll()
+          .executeTakeFirstOrThrow()
       })
 
       return {

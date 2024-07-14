@@ -13,9 +13,11 @@ export class MinioClient implements FileStorageInterface {
 
   private defaultBucket = process.env.MINIO_DEFAULT_BUCKET || 'bucket'
 
-  async upload(file: Buffer | Readable, path: string, options?: { bucket?: string }) {
+  async upload(file: Buffer | Readable, path: string, options?: { bucket?: string, mimeType?: string }) {
     const bucket = options?.bucket || this.defaultBucket
-    await this.client.putObject(bucket, path, file)
+    await this.client.putObject(bucket, path, file, undefined, {
+      'Content-Type': options?.mimeType,
+    })
   }
 
   async delete(path: string, options?: { bucket?: string }) {
@@ -25,7 +27,7 @@ export class MinioClient implements FileStorageInterface {
 
   async getPreSignedUrl(path: string, options?: { bucket?: string }) {
     const bucket = options?.bucket || this.defaultBucket
-    return await this.client.presignedUrl('GET', bucket, path, 3 * 60)
+    return await this.client.presignedUrl('GET', bucket, path, 60 * 60) // 60 Min
   }
 
 }
