@@ -11,6 +11,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import * as Yup from 'Yup'
 import { ExternalLinkIcon, TrashIcon } from '@radix-ui/react-icons'
 import toast from 'react-hot-toast'
+import { useAuth } from '@/hooks/auth'
+import { redirect } from 'next/navigation'
 
 type UploadFormValues = {
   file_name: string,
@@ -20,6 +22,9 @@ type UploadFormValues = {
 export default function Admin() {
   const api = useApi()
   const formRef = useRef<FormikProps<UploadFormValues>>(null)
+  const auth = useAuth()
+
+  if (!auth.isAdmin) redirect('/login')
 
   const [uploadOpen, setUploadOpen] = useState(false)
 

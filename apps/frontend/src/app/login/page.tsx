@@ -19,10 +19,7 @@ type LoginForm = {
 export default function Login() {
   const api = useApi()
   const { isAdmin } = useAuth()
-  if (isAdmin) {
-    redirect('/admin')
-    return null
-  }
+  if (isAdmin) redirect('/admin')
 
   const { isPending, error, mutate: login } = useMutation({
     mutationFn: async (variables: LoginForm) => {
