@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, BoxProps, Text, TextField as RawTextField } from '@radix-ui/themes'
+import { BoxProps, TextField as RawTextField } from '@radix-ui/themes'
 import { useField } from 'formik'
 import { Field } from '@/components/forms/field'
 
